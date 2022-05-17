@@ -1,6 +1,9 @@
 # pyscope
 Python oscilloscope-like data acquisition with easily pluggable data sources.
 
+[SinusoidDataSource](https://github.com/mliss26/pyscope/blob/main/screenshots/pyscope_screenshot_sin.png "SinusoidDataSource Screenshot")
+[WhiteNoiseDataSource](https://github.com/mliss26/pyscope/blob/main/screenshots/pyscope_screenshot_white.png "WhiteNoiseDataSource with FFT Screenshot")
+
 # Dependencies
 * [numpy](https://numpy.org)
 * [matplotlib](https://matplotlib.org)
