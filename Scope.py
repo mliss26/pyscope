@@ -59,10 +59,10 @@ class Scope(object):
 
         if self.fft:
             self.axf.set_xlabel('Frequency (Hz)')
-            self.axf.set_ylabel('Magnitude (dB)')
+            self.axf.set_ylabel('Magnitude (dBFS)')
             self.axf.grid(True, which='major', axis='both', color='#505050')
             self.axf.grid(True, which='minor', axis='both', color='#101010')
-            self.axf.set_ylim(-120, 1)
+            self.axf.set_ylim(-180, 1)
             self.axf.xaxis.set_minor_locator(AutoMinorLocator())
             self.axf.yaxis.set_minor_locator(AutoMinorLocator())
 
@@ -321,6 +321,7 @@ class Scope(object):
         else:
             now = self.tdata[-1] + self.dt
         self.tdata.extend([now + i * self.dt for i in range(numsamples)])
+        now = self.tdata[-1] - self.dt
 
         # update the y limits
         if self.autoscale_en:
@@ -335,9 +336,9 @@ class Scope(object):
                 self._set_ylim()
 
         # add the data samples
-        plot_samples = round(self.plot_widths[self.plot_width_idx] * self.samplerate * 1.25)
-        if plot_samples < 50:
-            plot_samples = 50
+        plot_samples = round(self.plot_widths[self.plot_width_idx] * self.samplerate) + 2
+        if plot_samples < 128:
+            plot_samples = 128
         for i in range(len(self.ydata)):
             self.ydata[i].extend(samples[i])
 
