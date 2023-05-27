@@ -1,4 +1,5 @@
-from time import sleep
+from time import sleep, perf_counter
+from math import ceil
 import numpy as np
 from Scope import ScopeDataSource
 
@@ -14,13 +15,34 @@ class WhiteNoiseDataSource(ScopeDataSource):
 
     def produce_data(self):
         dt = 1 / self.samplerate
+        N = ceil(self.samplerate/50)
+        if N < 10:
+            N = 10
         running = True
+        sleep_delta = 0
+        alpha = 0.001
+        behind = False
         while running:
-            numsamples = 10
-            samples = []
-            for i in range(numsamples):
-                samples.append(np.random.normal(size=self.channels))
+            tic = perf_counter()
+            samples = np.ndarray((N, self.channels))
+            for n in range(N):
+                samples[n] = np.random.normal(size=self.channels)
 
             running = self.scope.add_samples(samples)
-            sleep(dt * numsamples)
+
+            toc = perf_counter()
+            iter_t = toc - tic
+            if iter_t >= (dt*N):
+                if not behind:
+                    print(f'ERROR: data source falling behind: {iter_t} >= {dt*N}')
+                behind = True
+            else:
+                behind = False
+                sleep_time = dt*N - iter_t - sleep_delta
+                if sleep_time > 0:
+                    tic = perf_counter()
+                    sleep(sleep_time)
+                    toc = perf_counter()
+                    sleep_delta_now = (toc-tic) - sleep_time
+                    sleep_delta = alpha*sleep_delta_now + (1-alpha)*sleep_delta
 

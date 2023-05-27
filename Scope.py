@@ -70,7 +70,7 @@ class Scope(object):
         self.fig.canvas.mpl_connect('resize_event', self._on_resize)
 
         self.anim = animation.FuncAnimation(self.fig, self._update, self._emitter,
-                interval=refresh_ms)
+                interval=refresh_ms, cache_frame_data=False)
 
         # setup Run/Stop button
         self.running = False
@@ -184,8 +184,8 @@ class Scope(object):
             self.mdata.append([])
             self.sample_cache.append([])
 
-            self.lines.append(Line2D(self.tdata, self.ydata[i], color=palate[i]))
-            self.ffts.append(Line2D(self.fdata, self.mdata[i], color=palate[i]))
+            self.lines.append(Line2D([], [], color=palate[i]))
+            self.ffts.append(Line2D([], [], color=palate[i]))
 
             self.axt.add_line(self.lines[i])
             if self.fft:
@@ -196,9 +196,9 @@ class Scope(object):
 
         if channel_labels is not None:
             if self.fft:
-                self.axf.legend(channel_labels)
+                self.axf.legend(channel_labels, loc='upper right')
             else:
-                self.axt.legend(channel_labels)
+                self.axt.legend(channel_labels, loc='upper left')
 
     def save_data_csv(self, filename):
         '''Save the captured data series in CSV format.'''
@@ -342,8 +342,9 @@ class Scope(object):
         for i in range(len(self.ydata)):
             self.ydata[i].extend(samples[i])
 
+            visible_time = self.tdata[-plot_samples:-1]
             visible_data = self.ydata[i][-plot_samples:-1]
-            self.lines[i].set_data(self.tdata[-plot_samples:-1], visible_data)
+            self.lines[i].set_data(visible_time, visible_data)
 
             # TODO support options for window and fixed FFT size (pad data or slide fft and aggregate as needed)
             if self.fft:

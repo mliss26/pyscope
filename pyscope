@@ -14,7 +14,7 @@ def main(args):
         scope.set_data_source(SinusoidDataSource, channels=20)
 
     elif (args.source == 'white'):
-        scope.set_data_source(WhiteNoiseDataSource, samplerate=125, channels=2)
+        scope.set_data_source(WhiteNoiseDataSource, samplerate=500, channels=2)
 
     else:
         raise Exception('Invalid data source: %s' % args.source)
