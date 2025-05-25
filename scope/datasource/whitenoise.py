@@ -1,7 +1,7 @@
 from time import sleep, perf_counter
 from math import ceil
 import numpy as np
-from .scopedatasource import ScopeDataSource
+from .scope import ScopeDataSource
 
 class WhiteNoiseDataSource(ScopeDataSource):
     '''Test scope data source providing a set of white noise outputs.'''

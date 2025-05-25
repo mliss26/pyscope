@@ -9,7 +9,7 @@ import matplotlib.animation as animation
 import numpy as np
 import csv
 
-from .datasource.scopedatasource import ScopeDataSource
+from .datasource.scope import ScopeDataSource
 
 
 class MplScope(object):
