@@ -1,34 +1,29 @@
 #!/usr/bin/env python3
-
 from argparse import ArgumentParser
-from Scope import Scope
-from SinusoidDataSource import SinusoidDataSource
-from WhiteNoiseDataSource import WhiteNoiseDataSource
+from scope.mplscope import MplScope
+from scope.datasource.factory import DataSourceFactory
+import sys
 
 
-def main(args):
+def main():
+    parser = ArgumentParser(description='Python oscilloscope')
 
-    scope = Scope(fft=args.fft)
+    parser.add_argument('--fft', action='store_true', help='show FFT below time domain plot')
+    subparser = parser.add_subparsers(required=True, dest='datasource')
 
-    if (args.source == 'sin'):
-        scope.set_data_source(SinusoidDataSource, channels=20)
+    ds_factory = DataSourceFactory()
+    ds_factory.add_parsers(subparser)
 
-    elif (args.source == 'white'):
-        scope.set_data_source(WhiteNoiseDataSource, samplerate=500, channels=2)
+    args = parser.parse_args()
 
-    else:
-        raise Exception('Invalid data source: %s' % args.source)
-
+    scope = MplScope(fft=args.fft)
+    scope.set_data_source(args.ds_class, **vars(args))
     scope.show()
     scope.stop_data_source()
     scope.save_data_csv('pyscope.csv')
 
+    return 0
+
 
 if __name__ == '__main__':
-    parser = ArgumentParser(description='Python oscilloscope')
-
-    parser.add_argument('-f', '--fft', action='store_true', help='show FFT below time domain plot')
-    parser.add_argument('-s', '--source', choices=['sin', 'white'],
-                                        default='sin', help='data source')
-
-    main(parser.parse_args())
+    sys.exit(main())

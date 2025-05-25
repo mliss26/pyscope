@@ -1,10 +1,17 @@
 from time import sleep, perf_counter
 from math import ceil
 import numpy as np
-from Scope import ScopeDataSource
+from .scopedatasource import ScopeDataSource
 
 class WhiteNoiseDataSource(ScopeDataSource):
     '''Test scope data source providing a set of white noise outputs.'''
+
+    @classmethod
+    def add_parser(cls, subparser):
+        parser = subparser.add_parser('white', description='White noise data source for testing')
+        parser.add_argument('-s', '--samplerate', type=float, default=500, help='Samplerate in Hz')
+        parser.add_argument('-c', '--channels', type=int, default=2, help='Channel count')
+        return parser
 
     def __init__(self, scope, samplerate=250, channels=1, **kwargs):
         self.scope = scope

@@ -3,37 +3,17 @@ from matplotlib.lines import Line2D
 from matplotlib.ticker import AutoMinorLocator
 from matplotlib.widgets import Button
 from threading import Thread, Lock
-from abc import ABC, abstractmethod
 from colorsys import hsv_to_rgb
 import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import numpy as np
 import csv
 
-
-class ScopeDataSource(ABC):
-    '''Abstract base class for a source of data to the scope.'''
-
-    @abstractmethod
-    def __init__(self, scope, **kwargs):
-        '''Data source constructor
-
-           Must save the reference to the scope and perform any required initialization
-           for the data source as well as configure the scope parameters.'''
-        pass
-
-    @abstractmethod
-    def produce_data(self):
-        '''Data production function
-
-           This is where the source of data is provided to the scope. It must be a loop
-           which provides one or more samples of data for every channel to the scope via
-           calls to scope.add_samples.'''
-        pass
+from .datasource.scopedatasource import ScopeDataSource
 
 
-class Scope(object):
-    '''Oscilloscope like scrolling plot of arbitrary data.'''
+class MplScope(object):
+    '''Oscilloscope like scrolling plot of arbitrary data using matplotlib.'''
 
     def __init__(self, refresh_ms=34, fft=False):
         self.refresh_ms = refresh_ms

@@ -1,25 +1,24 @@
 from time import sleep, perf_counter
 from math import ceil
 import numpy as np
-from Scope import ScopeDataSource
+from .scopedatasource import ScopeDataSource
 
 class SinusoidDataSource(ScopeDataSource):
     '''Test scope data source providing a set of sinusoidal outputs.'''
 
-    def __init__(self, scope, **kwargs):
-        if 'samplerate' in kwargs:
-            self.rate = kwargs['samplerate']
-        else:
-            self.rate = 250
-        if 'frequency' in kwargs:
-            self.freq = kwargs['frequency']
-        else:
-            self.freq = 0.5
-        if 'channels' in kwargs:
-            self.channels = kwargs['channels']
-        else:
-            self.channels = 8
+    @classmethod
+    def add_parser(cls, subparser):
+        parser = subparser.add_parser('sin', description='Sin wave data source for testing')
+        parser.add_argument('-s', '--samplerate', type=float, default=250, help='Samplerate in Hz')
+        parser.add_argument('-f', '--frequency', type=float, default=0.5, help='Sinusoid frequency in Hz')
+        parser.add_argument('-c', '--channels', type=int, default=8, help='Channel count')
+        return parser
+
+    def __init__(self, scope, samplerate=250, frequency=0.5, channels=8, **kwargs):
         self.scope = scope
+        self.rate = samplerate
+        self.freq = frequency
+        self.channels = channels
 
         channel_labels = []
         self.phase = []
