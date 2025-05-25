@@ -10,15 +10,42 @@ Python oscilloscope-like data acquisition with easily pluggable data sources.
 
 # Usage
 ```
-usage: pyscope [-h] [-f] [-s {sin,white}]
+usage: pyscope [-h] [--fft] {white,sin} ...
 
 Python oscilloscope
 
+positional arguments:
+  {white,sin}
+
+options:
+  -h, --help   show this help message and exit
+  --fft        show FFT below time domain plot
+```
+```
+usage: pyscope white [-h] [-s SAMPLERATE] [-c CHANNELS]
+
+White noise data source for testing
+
 options:
   -h, --help            show this help message and exit
-  -f, --fft             show FFT below time domain plot
-  -s {sin,white}, --source {sin,white}
-                        data source
+  -s, --samplerate SAMPLERATE
+                        Samplerate in Hz
+  -c, --channels CHANNELS
+                        Channel count
+```
+```
+usage: pyscope sin [-h] [-s SAMPLERATE] [-f FREQUENCY] [-c CHANNELS]
+
+Sin wave data source for testing
+
+options:
+  -h, --help            show this help message and exit
+  -s, --samplerate SAMPLERATE
+                        Samplerate in Hz
+  -f, --frequency FREQUENCY
+                        Sinusoid frequency in Hz
+  -c, --channels CHANNELS
+                        Channel count
 ```
 
 # DataSource API
